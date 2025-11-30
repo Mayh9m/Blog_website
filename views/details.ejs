@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head.ejs') %>
+<body>
+    <%- include('./partials/nav.ejs') %>
+                <div class="details content">
+                        <% if (typeof error !== 'undefined') { %>
+                            <div style="background:#ffefef;padding:10px;border-radius:8px;color:#8b1c1c;margin-bottom:12px">⚠️ <%= error %></div>
+                        <% } %>
+                        <h2 class="title"><%= blog.title %></h2>
+            <div class="content">
+                <p><%= blog.body%> </p>
+            </div>
+            <a class="delete" data-doc="<%= blog._id %>">Delete</a>
+           
+        </div>
+        <%- include('./partials/footer.ejs') %>
+        <script>
+            const trashcan = document.querySelector('a.delete');
+            // ensure the element exists before attaching a listener
+            if (trashcan) {
+                trashcan.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // use template literal (backticks) so the id is interpolated
+                    const endpoint = `/blogs/${trashcan.dataset.doc}`;
+                                fetch(endpoint, { method: 'DELETE' })
+                                    .then(async (response) => {
+                                        if (!response.ok) {
+                                            // non-JSON body (404 HTML) or server error — read text and show error
+                                            const text = await response.text();
+                                            console.error('Delete failed:', response.status, text);
+                                            alert('Delete failed — see console for details');
+                                            return null;
+                                        }
+                                        return response.json();
+                                    })
+                                    .then((data) => {
+                                        if (data) window.location.href = data.redirect || '/blogs';
+                                    })
+                                    .catch((err) => console.error('Network / parse error during delete:', err));
+            });
+            }
+        </script>
+    </body>
+</html>
