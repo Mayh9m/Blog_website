@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // connect to MongoDB and only start the server after a successful connection
-const dbURI = 'mongodb+srv://mahim:mahimrawal123@cluster0.biibrlz.mongodb.net/node-tuts?appName=Cluster0';
+const dbURI = 'mongodb+srv://mahim:<password-here>@cluster0.biibrlz.mongodb.net/node-tuts?appName=Cluster0';
 
 mongoose.connect(dbURI)
     .then(() => {
